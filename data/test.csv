@@ -1,0 +1,6 @@
+reservation_code,status,name,phone_number,adults,children,infants,start_date,end_date,nights,confirmation_date,flat,price
+HM5JII,已确认,Ctine Kopa,'+79,6,0,0,2019-12-31,2020-01-05,5,2019-09-16,Juto's Colourful Apartment in Bratislava Old Town,€2.14
+HM5NII,已确认,Liib Lapea,'+17,5,0,0,2019-12-29,2019-12-31,2,2019-10-02,Juto's Colourful Apartment in Bratislava Old Town,€5.92
+HMJXII,已确认,Lciia Sato,'+64,6,0,0,2019-12-27,2019-12-29,2,2019-10-17,Juto's Colourful Apartment in Bratislava Old Town,€6.77
+HMSQII,已确认,Bon Gtiu,'+33,3,1,0,2019-12-22,2019-12-23,1,2019-10-06,Juto's Colourful Apartment in Bratislava Old Town,€3.38
+HMPTII,已确认,To La,'+45,4,1,0,2019-12-20,2019-12-22,2,2019-10-13,Juto's Colourful Apartment in Bratislava Old Town,€2.50
