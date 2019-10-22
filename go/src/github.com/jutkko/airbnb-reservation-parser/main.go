@@ -38,6 +38,9 @@ func main() {
 		toDate = beginningOfMonth.AddDate(0, 1, 0)
 	} else {
 		toDate, err = time.Parse(listing.LayoutISO, *toDatePtr)
+
+		// Defaults to the next day, since the calculation is not inclusive
+		toDate = toDate.AddDate(0, 0, 1)
 		if err != nil {
 			log.Fatal("failed to parse to date ", err)
 		}
@@ -48,12 +51,6 @@ func main() {
 		log.Fatal("failed to process date ", err)
 	}
 
-	for _, reservation := range myListing.Reservations {
-		fmt.Printf("%s's booking:\n", reservation.Name)
-		fmt.Printf("Start: %s\n", reservation.StartDate.Format(listing.LayoutISO))
-		fmt.Printf("End: %s\n", reservation.EndDate.Format(listing.LayoutISO))
-	}
-
-	fmt.Printf("book rate: %.2f\n", myListing.GetBookRate(fromDate, toDate))
-
+	bookRate, bookPrice := myListing.GetBookRateAndPrice(fromDate, toDate)
+	fmt.Printf("book rate: %.2f price %.2f\n", bookRate, bookPrice)
 }

@@ -12,7 +12,6 @@ import (
 
 const (
 	LayoutISO = "2006-01-02"
-	Cancelled = "已取消"
 	Confirmed = "已确认"
 )
 
@@ -88,43 +87,57 @@ func ProcessData(filename string) (*Listing, error) {
 }
 
 // From has to be strictly earlier than to
-func (l *Listing) GetBookRate(from, to time.Time) float64 {
+func (l *Listing) GetBookRateAndPrice(from, to time.Time) (float64, float64) {
 	var bookedNightsInRange int
+	var bookedNightsTotalPrice float64
+
 	for _, reservation := range l.Reservations {
-		if to.Before(reservation.StartDate.Time) || from.After(reservation.EndDate.Time) {
+		if to.Before(reservation.StartDate.Time) || to.Equal(reservation.StartDate.Time) || from.After(reservation.EndDate.Time) || from.Equal(reservation.EndDate.Time) {
 			continue
 		}
 
-		fmt.Printf("for %s's booking before %d\n", reservation.Name, bookedNightsInRange)
+		fmt.Printf("for %s's booking before nights %d price: %.2f\n", reservation.Name, bookedNightsInRange, bookedNightsTotalPrice)
+
+		nightlyPrice := reservation.Price.float64 / float64(reservation.Nights)
 		if (reservation.StartDate.Time.After(from) || reservation.StartDate.Time.Equal(from)) && (reservation.EndDate.Time.Before(to) || reservation.EndDate.Time.Equal(to)) {
 			// (from to)          *****
 			// (reserve start end) ***
 			bookedNightsInRange += reservation.Nights
+			bookedNightsTotalPrice += nightlyPrice * float64(reservation.Nights)
 		} else if reservation.StartDate.Time.After(from) && reservation.EndDate.After(to) {
 			// (from to)          *****
 			// (reserve start end)  *****
-			bookedNightsInRange += int(to.Sub(reservation.StartDate.Time).Hours()/24)
+			nights := int(to.Sub(reservation.StartDate.Time).Hours()/24)
+			bookedNightsInRange += nights
+			bookedNightsTotalPrice += nightlyPrice * float64(nights)
 		} else if reservation.StartDate.Time.Before(from) && reservation.EndDate.Before(to) {
 			// (from to)            *****
 			// (reserve start end) *****
-			bookedNightsInRange += int(reservation.EndDate.Sub(from).Hours()/24)
+			nights := int(reservation.EndDate.Sub(from).Hours()/24)
+			bookedNightsInRange += nights
+			bookedNightsTotalPrice += nightlyPrice * float64(nights)
 		} else if reservation.StartDate.Time.Before(from) && reservation.EndDate.After(to) {
 			// (from to)            ***
 			// (reserve start end) *****
-			bookedNightsInRange += int(to.Sub(from).Hours()/24)
+			nights := int(to.Sub(from).Hours()/24)
+			bookedNightsInRange += nights
+			bookedNightsTotalPrice += nightlyPrice * float64(nights)
 		} else if reservation.StartDate.Time.Equal(from) && reservation.EndDate.After(to) {
 			// (from to)           ***
 			// (reserve start end) *****
-			bookedNightsInRange += int(to.Sub(reservation.StartDate.Time).Hours()/24)
+			nights := int(to.Sub(reservation.StartDate.Time).Hours()/24)
+			bookedNightsInRange += nights
+			bookedNightsTotalPrice += nightlyPrice * float64(nights)
 		} else if reservation.StartDate.Time.Before(from) && reservation.EndDate.Equal(to) {
 			// (from to)             ***
 			// (reserve start end) *****
-			bookedNightsInRange += int(reservation.EndDate.Time.Sub(from).Hours()/24)
+			nights := int(reservation.EndDate.Time.Sub(from).Hours()/24)
+			bookedNightsInRange += nights
+			bookedNightsTotalPrice += nightlyPrice * float64(nights)
 		}
 
-		fmt.Printf("for %s's booking after %d\n", reservation.Name, bookedNightsInRange)
+		fmt.Printf("for %s's booking after nights %d price: %.2f\n", reservation.Name, bookedNightsInRange, bookedNightsTotalPrice)
 	}
 
-	fmt.Printf("booked nights: %d\n", bookedNightsInRange)
-	return float64(bookedNightsInRange) / (to.Sub(from).Hours()/24)
+	return float64(bookedNightsInRange) / (to.Sub(from).Hours()/24), bookedNightsTotalPrice
 }
