@@ -95,30 +95,34 @@ func (l *Listing) GetBookRate(from, to time.Time) float64 {
 			continue
 		}
 
+		fmt.Printf("for %s's booking before %d\n", reservation.Name, bookedNightsInRange)
 		if (reservation.StartDate.Time.After(from) || reservation.StartDate.Time.Equal(from)) && (reservation.EndDate.Time.Before(to) || reservation.EndDate.Time.Equal(to)) {
-			fmt.Printf("Adding %d\n", reservation.Nights)
+			// (from to)          *****
+			// (reserve start end) ***
 			bookedNightsInRange += reservation.Nights
 		} else if reservation.StartDate.Time.After(from) && reservation.EndDate.After(to) {
-			// Check this
+			// (from to)          *****
+			// (reserve start end)  *****
 			bookedNightsInRange += int(to.Sub(reservation.StartDate.Time).Hours()/24)
-			fmt.Printf("1 Adding %d\n", int(to.Sub(reservation.StartDate.Time).Hours()/24))
 		} else if reservation.StartDate.Time.Before(from) && reservation.EndDate.Before(to) {
-			// Check this
+			// (from to)            *****
+			// (reserve start end) *****
 			bookedNightsInRange += int(reservation.EndDate.Sub(from).Hours()/24)
-			fmt.Printf("2 Adding %d\n", int(reservation.EndDate.Sub(from).Hours()/24))
 		} else if reservation.StartDate.Time.Before(from) && reservation.EndDate.After(to) {
-			// Check this
+			// (from to)            ***
+			// (reserve start end) *****
 			bookedNightsInRange += int(to.Sub(from).Hours()/24)
-			fmt.Printf("3 Adding %d\n", int(to.Sub(from).Hours()/24))
 		} else if reservation.StartDate.Time.Equal(from) && reservation.EndDate.After(to) {
-			// Check this
+			// (from to)           ***
+			// (reserve start end) *****
 			bookedNightsInRange += int(to.Sub(reservation.StartDate.Time).Hours()/24)
-			fmt.Printf("4Adding %d\n", int(to.Sub(reservation.StartDate.Time).Hours()/24))
 		} else if reservation.StartDate.Time.Before(from) && reservation.EndDate.Equal(to) {
-			// Check this
+			// (from to)             ***
+			// (reserve start end) *****
 			bookedNightsInRange += int(reservation.EndDate.Time.Sub(from).Hours()/24)
-			fmt.Printf("5 Adding %d\n", int(reservation.EndDate.Time.Sub(from).Hours()/24))
 		}
+
+		fmt.Printf("for %s's booking after %d\n", reservation.Name, bookedNightsInRange)
 	}
 
 	fmt.Printf("booked nights: %d\n", bookedNightsInRange)

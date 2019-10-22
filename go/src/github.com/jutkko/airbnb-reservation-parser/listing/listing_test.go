@@ -98,3 +98,16 @@ func TestListingGetBookRate4(t *testing.T) {
 
 	assert.Equal(t, 0.5, testListing.GetBookRate(from, to), "book rate should match")
 }
+
+func TestListingGetBookRate5(t *testing.T) {
+	testListing, err := ProcessData(testFilename)
+	assert.NoError(t, err, "process should not fail")
+
+	from, err := time.Parse(LayoutISO, "2019-12-18")
+	assert.NoError(t, err, "parse should not fail")
+
+	to, err := time.Parse(LayoutISO, "2019-12-31")
+	assert.NoError(t, err, "parse should not fail")
+
+	assert.Equal(t, float64(7)/float64(13), testListing.GetBookRate(from, to), "book rate should match")
+}
