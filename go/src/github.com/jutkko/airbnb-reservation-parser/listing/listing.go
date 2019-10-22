@@ -96,8 +96,6 @@ func (l *Listing) GetBookRateAndPrice(from, to time.Time) (float64, float64) {
 			continue
 		}
 
-		fmt.Printf("for %s's booking before nights %d price: %.2f\n", reservation.Name, bookedNightsInRange, bookedNightsTotalPrice)
-
 		nightlyPrice := reservation.Price.float64 / float64(reservation.Nights)
 		if (reservation.StartDate.Time.After(from) || reservation.StartDate.Time.Equal(from)) && (reservation.EndDate.Time.Before(to) || reservation.EndDate.Time.Equal(to)) {
 			// (from to)          *****
@@ -136,7 +134,7 @@ func (l *Listing) GetBookRateAndPrice(from, to time.Time) (float64, float64) {
 			bookedNightsTotalPrice += nightlyPrice * float64(nights)
 		}
 
-		fmt.Printf("for %s's booking after nights %d price: %.2f\n", reservation.Name, bookedNightsInRange, bookedNightsTotalPrice)
+		fmt.Printf("%s's booking after nights %d price: %.2f\n", reservation.Name, bookedNightsInRange, bookedNightsTotalPrice)
 	}
 
 	return float64(bookedNightsInRange) / (to.Sub(from).Hours()/24), bookedNightsTotalPrice

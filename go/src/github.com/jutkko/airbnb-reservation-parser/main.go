@@ -52,5 +52,5 @@ func main() {
 	}
 
 	bookRate, bookPrice := myListing.GetBookRateAndPrice(fromDate, toDate)
-	fmt.Printf("book rate: %.2f price %.2f\n", bookRate, bookPrice)
+	fmt.Printf("\nbook rate: %.2f price %.2f\n", bookRate, bookPrice)
 }
