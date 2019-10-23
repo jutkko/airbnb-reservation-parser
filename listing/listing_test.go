@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const testFilename = "../../../../../../data/test.csv"
+const testFilename = "../data/test.csv"
 
 func TestProcessData(t *testing.T) {
 	_, err := ProcessData(testFilename)
