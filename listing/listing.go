@@ -20,7 +20,7 @@ type Date struct {
 }
 
 // Convert the CSV string as internal date
-func (d*Date) UnmarshalCSV(csv string) (err error) {
+func (d *Date) UnmarshalCSV(csv string) (err error) {
 	d.Time, err = time.Parse(LayoutISO, csv)
 	return err
 }
@@ -38,18 +38,18 @@ func (p *Price) UnmarshalCSV(csv string) (err error) {
 }
 
 type Reservation struct {
-	ReservationCode string `csv:"reservation_code"`
+	ReservationCode int `csv:"-"`
 	Status string `csv:"status"`
 	Name string `csv:"name"`
-	PhoneNumber string `csv:"phone_number"`
-	Adults int `csv:"adults"`
-	Children int `csv:"children"`
-	Infants int `csv:"infants"`
+	PhoneNumber int `csv:"-"`
+	Adults int `csv:"-"`
+	Children int `csv:"-"`
+	Infants int `csv:"-"`
 	StartDate Date `csv:"start_date"`
 	EndDate Date `csv:"end_date"`
 	Nights int `csv:"nights"`
-	ConfirmationDate Date `csv:"confirmation_date"`
-	Flat string `csv:"flat"`
+	ConfirmationDate int `csv:"-"`
+	Flat int `csv:"-"`
 	Price Price `csv:"price"`
 }
 
